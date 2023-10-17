@@ -8,15 +8,18 @@ import com.example.movve.data.remote.MovieDto
 import com.example.movve.data.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class PopularMovieViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val  movieRepository: MovieRepository
 ) : ViewModel() {
+
 
     fun getPopularMovies(): Flow<PagingData<MovieDto>> = movieRepository.getAllPopularMovie().cachedIn(viewModelScope)
 
     fun getNowPlayingMovies(): Flow<PagingData<MovieDto>> = movieRepository.getAllNowPlayingMovies().cachedIn(viewModelScope)
 
 }
+
