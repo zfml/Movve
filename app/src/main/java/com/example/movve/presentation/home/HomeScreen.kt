@@ -38,13 +38,15 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.movve.data.remote.MovieDto
+import com.example.movve.domain.model.Movie
+import com.example.movve.presentation.component.MoviesListContent
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    onNavigateToMovieDetail: (id: String) -> Unit,
+    onNavigateToMovieDetail: (String) -> Unit,
     onNavigateToSearchScreen: () -> Unit
 ) {
 
@@ -53,19 +55,10 @@ fun HomeScreen(
 
     Scaffold (
         topBar = {
-            TopAppBar(
-                title = {
-                Text(text = "Movve")
-            },
-            actions = {
-                IconButton(onClick = { onNavigateToSearchScreen() }) {
-                    Image(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
-                    )
-                }
-            }
-            )
+              MovieTopBar(
+                  title = "Movve",
+                  onNavigateToSearchScreen = onNavigateToSearchScreen
+              )
         },
         content = {innerPadding ->
 
@@ -78,29 +71,19 @@ fun HomeScreen(
                         .fillMaxSize()
                         .padding(innerPadding)
                 ) {
-
-                    Text(
-                        text = "Popular Movies",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .padding(8.dp)
-                    )
-
                     MoviesListContent(
+                        title = "Popular Movies",
+                        movies = popularMovies,
+                        onNavigateToMovieDetail = onNavigateToMovieDetail
+                    )
+                    MoviesListContent(
+                        title = "Now Playing Movies",
                         movies = nowPlayingMovies,
                         onNavigateToMovieDetail = onNavigateToMovieDetail
                     )
 
-                    Text(
-                        text = "Now Playing Movies",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .padding(8.dp)
-                    )
-                    MoviesListContent(
-                        movies = popularMovies,
-                        onNavigateToMovieDetail = onNavigateToMovieDetail
-                    )
+
+
 
 
                 }
@@ -128,39 +111,10 @@ fun LoadingScreen(
     }
 }
 
-@Composable
-fun MoviesListContent(
-    modifier: Modifier = Modifier,
-    movies: LazyPagingItems<MovieDto>,
-    onNavigateToMovieDetail: (id: String) -> Unit
-) {
-    LazyRow(
-        modifier = Modifier,
-        contentPadding = PaddingValues(
-            start = 4.dp,
-            end = 4.dp
-        )
-    ) {
-        items(
-            count = movies.itemCount,
-        ) { index ->
-            val movie = movies[index]
-            movie?.let {
-                MovieItem(
-                    movie = movie,
-                    onClickedDetail = {id ->
-                        onNavigateToMovieDetail(id)
-                    }
-                )
-
-            }
-        }
-    }
-}
 
 @Composable
 fun MovieItem(
-    movie: MovieDto,
+    movie: Movie,
     onClickedDetail: (id: String) -> Unit,
     modifier: Modifier = Modifier
 ){
@@ -169,7 +123,7 @@ fun MovieItem(
             .padding(4.dp)
             .width(150.dp)
             .clickable {
-                       onClickedDetail(movie.id)
+                onClickedDetail(movie.id)
             }
         ,
         colors = CardDefaults.cardColors(
@@ -184,7 +138,7 @@ fun MovieItem(
                     .height(194.dp)
                 ,
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://image.tmdb.org/t/p/original${movie.poster_path}")
+                    .data("https://image.tmdb.org/t/p/original${movie.posterPath}")
                     .build()
                 ,
                 contentDescription = movie.title,
@@ -206,7 +160,7 @@ fun MovieItem(
             )
 
             Text(
-                text = movie.release_date,
+                text = movie.releaseDate,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall,

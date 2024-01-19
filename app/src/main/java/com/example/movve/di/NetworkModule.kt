@@ -2,7 +2,9 @@ package com.example.movve.di
 
 import com.example.movve.data.remote.HeaderInterceptor
 import com.example.movve.data.remote.MovieApi
-import com.example.movve.data.remote.util.Constants.BASE_URL
+import com.example.movve.data.repository.MovieRepositoryImpl
+import com.example.movve.data.util.Constants.BASE_URL
+import com.example.movve.domain.repository.MovieRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,6 +51,10 @@ object NetworkModule {
     fun provideMovieApi(retrofit: Retrofit): MovieApi {
         return retrofit.create(MovieApi::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideMovieRepository(movieApi: MovieApi): MovieRepository = MovieRepositoryImpl(movieApi)
 
 
 

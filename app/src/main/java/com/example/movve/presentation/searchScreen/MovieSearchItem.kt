@@ -19,11 +19,12 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.movve.data.remote.MovieDto
+import com.example.movve.domain.model.Movie
 
 @Composable
 fun MovieSearchItem(
     modifier: Modifier = Modifier,
-    movie: MovieDto,
+    movie: Movie,
     onClickedDetail: (String) -> Unit
 ) {
     Card(
@@ -46,7 +47,7 @@ fun MovieSearchItem(
                     .height(300.dp)
                 ,
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://image.tmdb.org/t/p/original${movie.poster_path}")
+                    .data("https://image.tmdb.org/t/p/original${movie.posterPath}")
                     .build()
                 ,
                 contentDescription = movie.title,
@@ -68,7 +69,7 @@ fun MovieSearchItem(
             )
 
             Text(
-                text = movie.release_date,
+                text = movie.releaseDate,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall,

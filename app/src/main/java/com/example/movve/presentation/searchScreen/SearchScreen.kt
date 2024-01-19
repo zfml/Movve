@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.example.movve.presentation.home.MoviesListContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,7 +20,7 @@ fun SearchScreen(
     modifier: Modifier = Modifier,
     searchViewModel: SearchViewModel = hiltViewModel(),
     onNavigateToHomeScreen:() -> Unit,
-    onNavigateToDetailScreen: () -> Unit
+    onNavigateToDetailScreen: (String) -> Unit
 ) {
 
     val searchQuery by searchViewModel.searchQuery
@@ -51,9 +50,8 @@ fun SearchScreen(
                     movie?.let {
                         MovieSearchItem(
                             movie = movie,
-                            onClickedDetail = {
-                                onNavigateToHomeScreen()
-                            }
+                            onClickedDetail = {id ->
+                                onNavigateToDetailScreen(id)                            }
                         )
                     }
 

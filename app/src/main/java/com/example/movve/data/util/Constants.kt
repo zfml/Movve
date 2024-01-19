@@ -1,4 +1,4 @@
-package com.example.movve.data.remote.util
+package com.example.movve.data.util
 
 
  object Constants{
